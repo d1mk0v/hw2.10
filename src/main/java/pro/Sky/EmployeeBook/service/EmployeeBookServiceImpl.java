@@ -6,8 +6,11 @@ import pro.Sky.EmployeeBook.Employee;
 import pro.Sky.EmployeeBook.exeption.EmployeeAlreadyAddedException;
 import pro.Sky.EmployeeBook.exeption.EmployeeNotFoundException;
 import pro.Sky.EmployeeBook.exeption.EmployeeStorageIsFullException;
+import pro.Sky.EmployeeBook.exeption.InvalidInputException;
 
 import java.util.*;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class EmployeeBookServiceImpl implements EmployeeBookService {
@@ -20,6 +23,7 @@ public class EmployeeBookServiceImpl implements EmployeeBookService {
 
     public Employee addNewEmployee(String firstName, String lastName, int departmentID, double salary) {
         Employee employee = new Employee(firstName, lastName, departmentID, salary);
+        validationOfIncomingData(firstName, lastName);
 
         if (employees.size() >= maxEmployees) {
             throw new EmployeeStorageIsFullException("Штат сотрудников заполнен");
@@ -37,6 +41,7 @@ public class EmployeeBookServiceImpl implements EmployeeBookService {
 
     public Employee removeEmployee(String firstName, String lastName, int departmentID, double salary) {
         Employee employee = new Employee(firstName, lastName, departmentID, salary);
+        validationOfIncomingData(firstName, lastName);
 
         if (employees.containsKey(employee.getFullName())) {
             employees.remove(employee.getFullName());
@@ -51,6 +56,7 @@ public class EmployeeBookServiceImpl implements EmployeeBookService {
 
     public Employee findEmployee(String firstName, String lastName, int departmentID, double salary) {
         Employee employee = new Employee(firstName, lastName, departmentID, salary);
+        validationOfIncomingData(firstName, lastName);
 
         if (employees.containsKey(employee.getFullName())) {
             return employees.get(employee.getFullName());
@@ -62,8 +68,10 @@ public class EmployeeBookServiceImpl implements EmployeeBookService {
         return employee;
     }
 
-    private boolean validationOfIncomingData(String firstname, String lastname) {
-        return StringUtils.isAlpha(firstname) && StringUtils.isAlpha(lastname);
+    private void validationOfIncomingData(String firstname, String lastname) {
+        if (!isAlpha(firstname) && !isAlpha(lastname)) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override
