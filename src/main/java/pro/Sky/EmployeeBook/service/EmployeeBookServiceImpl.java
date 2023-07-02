@@ -1,5 +1,6 @@
 package pro.Sky.EmployeeBook.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pro.Sky.EmployeeBook.Employee;
 import pro.Sky.EmployeeBook.exeption.EmployeeAlreadyAddedException;
@@ -59,6 +60,10 @@ public class EmployeeBookServiceImpl implements EmployeeBookService {
             throw new EmployeeNotFoundException("Сотрудник не найден");
         }
         return employee;
+    }
+
+    private boolean validationOfIncomingData(String firstname, String lastname) {
+        return StringUtils.isAlpha(firstname) && StringUtils.isAlpha(lastname);
     }
 
     @Override
